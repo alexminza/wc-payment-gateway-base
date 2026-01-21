@@ -38,10 +38,10 @@ abstract class WC_Payment_Gateway_WBC_Base extends AbstractPaymentMethodType
      */
     public function initialize()
     {
-        $this->settings = get_option("woocommerce_{$this->name}_settings", array());
+        $gateways = WC()->payment_gateways()->payment_gateways();
 
-        $gateways      = WC()->payment_gateways->payment_gateways();
-        $this->gateway = $gateways[$this->name];
+        $this->gateway  = $gateways[$this->name];
+        $this->settings = get_option($this->gateway->get_option_key(), array());
     }
 
     /**
