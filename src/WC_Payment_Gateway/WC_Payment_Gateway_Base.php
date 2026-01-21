@@ -20,8 +20,6 @@ class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     public const SUPPORTED_CURRENCIES = array();
     public const ORDER_TEMPLATE       = 'Order #%1$s';
 
-    public const DEFAULT_TIMEOUT = 30; // seconds
-
     protected $testmode, $debug, $logger;
     protected $order_template;
 

@@ -22,6 +22,8 @@
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
 		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
 		<exclude name="WordPress.Arrays.ArrayKeySpacingRestrictions.NoSpacesAroundArrayKeys" />
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
 		<exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
 		<exclude name="Generic.WhiteSpace.ArbitraryParenthesesSpacing" />
@@ -72,10 +74,6 @@
 	</rule>
 
 	<rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
-		<type>warning</type>
-	</rule>
-
-	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
 		<type>warning</type>
 	</rule>
 
