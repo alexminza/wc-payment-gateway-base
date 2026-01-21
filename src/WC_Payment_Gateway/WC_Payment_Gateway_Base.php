@@ -29,6 +29,14 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         $this->debug    = wc_string_to_bool($this->get_option('debug', 'no'));
         $this->logger   = new \WC_Logger(null, $this->debug ? \WC_Log_Levels::DEBUG : \WC_Log_Levels::INFO);
 
+        $this->enabled     = $this->get_option('enabled', 'no');
+        $this->title       = $this->get_option('title', $this->get_method_title());
+        $this->description = $this->get_option('description');
+
+        if ($this->testmode) {
+            $this->description = $this->get_test_message($this->description);
+        }
+
         $this->order_template = $this->get_option('order_template', static::ORDER_TEMPLATE);
     }
 
