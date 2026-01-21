@@ -1,1 +1,1 @@
-# wc-payment-gateway-base
+# WooCommerce Payment Gateway Base
