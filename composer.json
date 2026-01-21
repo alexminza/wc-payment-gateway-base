@@ -1,0 +1,39 @@
+{
+    "name": "alexminza/wc-payment-gateway-base",
+    "description": "Payment Gateway Base for WooCommerce",
+    "type": "library",
+    "keywords": [
+        "woocommerce",
+        "wordpress",
+        "payments",
+        "sdk",
+        "php"
+    ],
+    "homepage": "https://github.com/alexminza/wc-payment-gateway-base",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Alexander Minza",
+            "homepage": "https://www.alexminza.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/alexminza/wc-payment-gateway-base/issues",
+        "forum": "https://github.com/alexminza/wc-payment-gateway-base/discussions",
+        "source": "https://github.com/alexminza/wc-payment-gateway-base"
+    },
+    "require": {
+        "php": ">=7.2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "AlexMinza\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.2.5"
+        }
+    }
+}
