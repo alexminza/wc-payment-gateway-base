@@ -15,10 +15,11 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     public const MOD_ID          = 'wc-payment-gateway-base';
     public const MOD_TEXT_DOMAIN = self::MOD_ID;
     public const MOD_VERSION     = null;
-    public const MOD_PLUGIN_FILE = null;
 
     public const SUPPORTED_CURRENCIES = array();
     public const ORDER_TEMPLATE       = 'Order #%1$s';
+
+    public static $mod_plugin_file = null;
 
     protected $testmode, $debug, $logger;
     protected $order_template;
