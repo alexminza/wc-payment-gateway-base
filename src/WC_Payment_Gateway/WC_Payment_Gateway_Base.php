@@ -10,7 +10,7 @@ namespace AlexMinza\WC_Payment_Gateway;
 
 defined('ABSPATH') || exit;
 
-class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
+abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
 {
     public const MOD_ID          = 'wc-payment-gateway-base';
     public const MOD_TEXT_DOMAIN = self::MOD_ID;
