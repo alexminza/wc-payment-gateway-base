@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package wc-victoriabank
+ * @package wc-payment-gateway-base
  */
 
 declare(strict_types=1);
@@ -65,7 +65,7 @@ abstract class WC_Payment_Gateway_WBC_Base extends AbstractPaymentMethodType
 
         wp_register_script(
             $script_id,
-            plugins_url('assets/js/blocks.js', WC_VICTORIABANK_PLUGIN_FILE),
+            plugins_url('assets/js/blocks.js', $this->gateway::MOD_PLUGIN_FILE),
             array(
                 'wc-blocks-registry',
                 'wc-settings',
@@ -81,7 +81,7 @@ abstract class WC_Payment_Gateway_WBC_Base extends AbstractPaymentMethodType
             wp_set_script_translations(
                 $script_id,
                 $this->gateway::MOD_TEXT_DOMAIN,
-                plugin_dir_path(WC_VICTORIABANK_PLUGIN_FILE) . 'languages'
+                plugin_dir_path($this->gateway::MOD_PLUGIN_FILE) . 'languages'
             );
         }
 

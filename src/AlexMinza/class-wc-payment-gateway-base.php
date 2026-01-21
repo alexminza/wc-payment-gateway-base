@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package wc-payment-gateway-base
+ */
+
 declare(strict_types=1);
 
 namespace AlexMinza\WC_Payment_Gateway;
@@ -8,14 +12,15 @@ defined('ABSPATH') || exit;
 
 class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
 {
-    const MOD_ID          = 'wc-payment-gateway-base';
-    const MOD_TEXT_DOMAIN = self::MOD_ID;
-    const MOD_VERSION     = null;
+    public const MOD_ID          = 'wc-payment-gateway-base';
+    public const MOD_TEXT_DOMAIN = self::MOD_ID;
+    public const MOD_VERSION     = null;
+    public const MOD_PLUGIN_FILE = null;
 
-    const SUPPORTED_CURRENCIES = array();
-    const ORDER_TEMPLATE       = 'Order #%1$s';
+    public const SUPPORTED_CURRENCIES = array();
+    public const ORDER_TEMPLATE       = 'Order #%1$s';
 
-    const DEFAULT_TIMEOUT = 30; // seconds
+    public const DEFAULT_TIMEOUT = 30; // seconds
 
     protected $testmode, $debug, $logger;
     protected $order_template;
