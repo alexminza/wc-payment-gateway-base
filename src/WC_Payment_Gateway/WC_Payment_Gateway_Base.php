@@ -32,6 +32,14 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         $this->order_template = $this->get_option('order_template', static::ORDER_TEMPLATE);
     }
 
+    public function admin_options()
+    {
+        $this->validate_settings();
+        $this->display_errors();
+
+        parent::admin_options();
+    }
+
     public function is_available()
     {
         if (!$this->is_valid_for_use()) {
