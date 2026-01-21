@@ -359,6 +359,17 @@ class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
 
         return null;
     }
+
+    protected static function return_response(int $status_code, ?string $response_text = null)
+    {
+        if (empty($response_text)) {
+            $response_text = get_status_header_desc($status_code);
+        }
+
+        http_response_code($status_code);
+        echo esc_html($response_text);
+        exit;
+    }
     //endregion
 
     //region Admin
