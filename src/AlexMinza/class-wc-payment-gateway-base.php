@@ -350,7 +350,8 @@ class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     protected static function get_guzzle_error_response_body(\Exception $exception)
     {
         // https://github.com/guzzle/guzzle/issues/2185
-        if ($exception instanceof \GuzzleHttp\Command\Exception\CommandException) {
+        if (is_a($exception, '\GuzzleHttp\Command\Exception\CommandException')) {
+            /** @var \GuzzleHttp\Command\Exception\CommandException $exception */
             $response = $exception->getResponse();
 
             if (!empty($response)) {
