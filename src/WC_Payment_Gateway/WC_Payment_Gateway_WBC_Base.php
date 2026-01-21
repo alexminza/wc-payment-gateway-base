@@ -61,7 +61,7 @@ abstract class WC_Payment_Gateway_WBC_Base extends AbstractPaymentMethodType
      */
     public function get_payment_method_script_handles()
     {
-        $script_id = 'wc-' . $this->name . '-block-frontend';
+        $script_id = "wc-{$this->name}-block-frontend";
 
         wp_register_script(
             $script_id,
