@@ -362,7 +362,7 @@ class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Admin
-    public static function plugin_links(array $links)
+    public static function plugin_action_links(array $links)
     {
         $plugin_links = array(
             sprintf(
