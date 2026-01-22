@@ -355,11 +355,38 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
             array(
                 'ip' => \WC_Geolocation::get_ip_address(),
                 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Logging request data for debugging purposes.
-                'request' => $_REQUEST,
-                'server' => $_SERVER,
+                'request'   => $_REQUEST,
+                'server'    => $this->redact_array($_SERVER),
                 'backtrace' => true,
             )
         );
+    }
+
+    protected const REDACT_ARRAY_SENSITIVE_KEYS = array(
+        'http_cookie',
+    );
+
+    /**
+     * Redact sensitive data from a multi-dimensional array.
+     *
+     * @param array  $data           The array to redact.
+     * @param string $replace        The string to replace sensitive data with.
+     * @param array  $sensitive_keys A non-associative array of keys that should be redacted.
+     *
+     * @return array The redacted array.
+     */
+    protected function redact_array(array $data, string $replace = '[REDACTED]', array $sensitive_keys = self::REDACT_ARRAY_SENSITIVE_KEYS)
+    {
+        array_walk_recursive(
+            $data,
+            function (&$value, $key) use ($sensitive_keys, $replace) {
+                if (in_array(strtolower( (string) $key), $sensitive_keys, true)) {
+                    $value = $replace;
+                }
+            }
+        );
+
+        return $data;
     }
 
     protected static function get_guzzle_error_response_body(\Exception $exception)
