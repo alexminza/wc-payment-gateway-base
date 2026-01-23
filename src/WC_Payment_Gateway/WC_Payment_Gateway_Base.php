@@ -234,6 +234,14 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Utility
+    protected static function get_payment_gateway_instance()
+    {
+        $gateways = WC()->payment_gateways()->payment_gateways();
+        $plugin = $gateways[static::MOD_ID] ?? new static();
+
+        return $plugin;
+    }
+
     /**
      * @global WP_Filesystem_Base $wp_filesystem
      */
