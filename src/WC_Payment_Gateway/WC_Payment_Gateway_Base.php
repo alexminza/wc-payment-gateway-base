@@ -215,22 +215,6 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Order
-    protected static function get_order_net_total(\WC_Order $order)
-    {
-        // https://github.com/woocommerce/woocommerce/issues/17795
-        // https://github.com/woocommerce/woocommerce/pull/18196
-        $total_refunded = 0;
-        $order_refunds = $order->get_refunds();
-        foreach ($order_refunds as $refund) {
-            if ($refund->get_refunded_payment()) {
-                $total_refunded += floatval($refund->get_amount());
-            }
-        }
-
-        $order_total = floatval($order->get_total());
-        return $order_total - $total_refunded;
-    }
-
     protected function format_price(float $price, string $currency)
     {
         $args = array(
