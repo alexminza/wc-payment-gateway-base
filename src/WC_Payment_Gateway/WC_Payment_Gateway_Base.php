@@ -234,14 +234,6 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Utility
-    protected static function get_payment_gateway_instance()
-    {
-        $gateways = WC()->payment_gateways()->payment_gateways();
-        $plugin = $gateways[static::MOD_ID] ?? new static();
-
-        return $plugin;
-    }
-
     /**
      * @global WP_Filesystem_Base $wp_filesystem
      */
@@ -424,10 +416,18 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region WooCommerce
-    public static function add_gateway(array $methods)
+    public static function add_payment_gateway(array $methods)
     {
         $methods[] = static::class;
         return $methods;
+    }
+
+    protected static function get_payment_gateway_instance()
+    {
+        $gateways = WC()->payment_gateways()->payment_gateways();
+        $plugin = $gateways[static::MOD_ID] ?? new static();
+
+        return $plugin;
     }
     //endregion
 }
