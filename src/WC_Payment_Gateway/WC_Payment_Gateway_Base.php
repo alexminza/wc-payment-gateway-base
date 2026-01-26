@@ -397,6 +397,13 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         echo esc_html($response_text);
         exit;
     }
+
+    protected function get_callback_url()
+    {
+        // https://developer.woocommerce.com/docs/extensions/core-concepts/woocommerce-plugin-api-callback/
+        $callback_url = WC()->api_request_url("wc_{$this->id}");
+        return (string) apply_filters("{$this->id}_callback_url", $callback_url);
+    }
     //endregion
 
     //region Admin
