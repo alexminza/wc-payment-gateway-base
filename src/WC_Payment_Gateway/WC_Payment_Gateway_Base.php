@@ -404,6 +404,12 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         $callback_url = WC()->api_request_url("wc_{$this->id}");
         return (string) apply_filters("{$this->id}_callback_url", $callback_url);
     }
+
+    protected function get_redirect_url(\WC_Order $order)
+    {
+        $redirect_url = $this->get_return_url($order);
+        return (string) apply_filters("{$this->id}_redirect_url", $redirect_url, $order);
+    }
     //endregion
 
     //region Admin
