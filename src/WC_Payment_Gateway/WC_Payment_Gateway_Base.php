@@ -409,7 +409,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         array_walk_recursive(
             $data,
             function (&$value, $key) use ($sensitive_keys, $replace) {
-                if (in_array(strtolower( (string) $key), $sensitive_keys, true)) {
+                if (in_array(strtolower(strval($key)), $sensitive_keys, true)) {
                     $value = $replace;
                 }
             }
@@ -426,7 +426,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
             $response = $exception->getResponse();
 
             if (!empty($response)) {
-                return (string) $response->getBody();
+                return strval($response->getBody());
             }
         }
 
@@ -448,13 +448,13 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     {
         // https://developer.woocommerce.com/docs/extensions/core-concepts/woocommerce-plugin-api-callback/
         $callback_url = WC()->api_request_url("wc_{$this->id}");
-        return (string) apply_filters("{$this->id}_callback_url", $callback_url);
+        return strval(apply_filters("{$this->id}_callback_url", $callback_url));
     }
 
     protected function get_redirect_url(\WC_Order $order)
     {
         $redirect_url = $this->get_return_url($order);
-        return (string) apply_filters("{$this->id}_redirect_url", $redirect_url, $order);
+        return strval(apply_filters("{$this->id}_redirect_url", $redirect_url, $order));
     }
     //endregion
 
