@@ -87,15 +87,20 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
             $this->add_error(
                 sprintf(
                     '<strong>%1$s: %2$s</strong>. %3$s: %4$s',
-                    // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
                     esc_html__('Unsupported store currency', static::MOD_TEXT_DOMAIN),
                     esc_html(get_woocommerce_currency()),
-                    // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
                     esc_html__('Supported currencies', static::MOD_TEXT_DOMAIN),
                     esc_html(join(', ', static::SUPPORTED_CURRENCIES))
                 )
             );
 
+            return false;
+        }
+
+        if (!$this->check_settings()) {
+            /* translators: 1: Payment gateway ID */
+            $message_instructions = sprintf(__('See plugin documentation for <a href="https://wordpress.org/plugins/%1$s/#installation" target="_blank">installation instructions</a>.', static::MOD_TEXT_DOMAIN), static::MOD_ID);
+            $this->add_error(sprintf('<strong>%1$s</strong>: %2$s. %3$s', esc_html__('Connection Settings', static::MOD_TEXT_DOMAIN), esc_html__('Not configured', static::MOD_TEXT_DOMAIN), wp_kses_post($message_instructions)));
             return false;
         }
 
@@ -115,7 +120,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     {
         if (empty($value)) {
             /* translators: 1: Field label */
-            $this->add_error(esc_html(sprintf(__('%1$s field must be set.', static::MOD_TEXT_DOMAIN), $this->get_settings_field_label($key)))); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
+            $this->add_error(esc_html(sprintf(__('%1$s field must be set.', static::MOD_TEXT_DOMAIN), $this->get_settings_field_label($key))));
         }
 
         return $value;
@@ -202,14 +207,14 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     protected function get_settings_admin_message()
     {
         /* translators: 1: Payment method title, 2: Plugin settings URL */
-        $message = sprintf(wp_kses_post(__('%1$s is not properly configured. Verify plugin <a href="%2$s">Connection Settings</a>.', static::MOD_TEXT_DOMAIN)), esc_html($this->get_method_title()), esc_url(self::get_settings_url())); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
+        $message = sprintf(wp_kses_post(__('%1$s is not properly configured. Verify plugin <a href="%2$s">Connection Settings</a>.', static::MOD_TEXT_DOMAIN)), esc_html($this->get_method_title()), esc_url(self::get_settings_url()));
         return $message;
     }
 
     protected function get_logs_admin_message()
     {
         /* translators: 1: Payment method title, 2: Plugin settings URL */
-        $message = sprintf(wp_kses_post(__('See <a href="%2$s">%1$s settings</a> page for log details and setup instructions.', static::MOD_TEXT_DOMAIN)), esc_html($this->get_method_title()), esc_url(self::get_settings_url())); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
+        $message = sprintf(wp_kses_post(__('See <a href="%2$s">%1$s settings</a> page for log details and setup instructions.', static::MOD_TEXT_DOMAIN)), esc_html($this->get_method_title()), esc_url(self::get_settings_url()));
         return $message;
     }
     //endregion
@@ -262,7 +267,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     {
         if ($this->testmode) {
             /* translators: 1: Original message */
-            $message = esc_html(sprintf(__('TEST: %1$s', static::MOD_TEXT_DOMAIN), $message)); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
+            $message = esc_html(sprintf(__('TEST: %1$s', static::MOD_TEXT_DOMAIN), $message));
         }
 
         return $message;
@@ -412,23 +417,20 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     }
     //endregion
 
-    //region Admin
+    //region Integration
     public static function plugin_action_links(array $links)
     {
         $plugin_links = array(
             sprintf(
                 '<a href="%1$s">%2$s</a>',
                 esc_url(self::get_settings_url()),
-                // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralDomain
                 esc_html__('Settings', static::MOD_TEXT_DOMAIN)
             ),
         );
 
         return array_merge($plugin_links, $links);
     }
-    //endregion
 
-    //region WooCommerce
     public static function add_payment_gateway(array $methods)
     {
         $methods[] = static::class;
