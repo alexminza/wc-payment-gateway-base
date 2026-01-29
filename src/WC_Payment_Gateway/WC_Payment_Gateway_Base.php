@@ -220,6 +220,36 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Order
+    /**
+     * Lookup order by meta field value.
+     *
+     * @link https://stackoverflow.com/questions/71438717/extend-wc-get-orders-with-a-custom-meta-key-and-meta-value
+     */
+    protected function get_order_by_meta_field_value(string $meta_key, string $meta_value)
+    {
+        $args = array(
+            'meta_key'   => $meta_key,   // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value' => $meta_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+        );
+
+        $orders = wc_get_orders($args);
+        $orders_count = count($orders);
+
+        if (1 === $orders_count) {
+            return $orders[0];
+        } elseif ($orders_count > 1) {
+            $this->log(
+                sprintf('Duplicate order meta %1$s: %2$s', $meta_key, $meta_value),
+                \WC_Log_Levels::ERROR,
+                array(
+                    'orders' => $orders,
+                )
+            );
+        }
+
+        return false;
+    }
+
     protected function format_price(float $price, string $currency)
     {
         $args = array(
@@ -233,7 +263,6 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     protected function get_order_description(\WC_Order $order)
     {
         $description = sprintf($this->order_template, $order->get_id());
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
         return wp_strip_all_tags(apply_filters("{$this->id}_order_description", $description, $order));
     }
     //endregion
