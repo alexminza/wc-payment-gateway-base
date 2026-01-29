@@ -240,12 +240,12 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
 
     //region Utility
     /**
-     * @global WP_Filesystem_Base $wp_filesystem
+     * @global \WP_Filesystem_Base $wp_filesystem
      */
     protected static function get_wp_filesystem()
     {
         /**
-         * @var WP_Filesystem_Base
+         * @var \WP_Filesystem_Base
          */
         global $wp_filesystem;
 
