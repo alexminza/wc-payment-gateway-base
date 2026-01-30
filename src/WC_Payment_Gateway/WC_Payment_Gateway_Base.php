@@ -204,6 +204,18 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         }
     }
 
+    protected function logs_admin_notice()
+    {
+        $message = $this->get_logs_admin_message();
+        \WC_Admin_Meta_Boxes::add_error($message);
+    }
+
+    protected function settings_admin_notice()
+    {
+        $message = $this->get_settings_admin_message();
+        \WC_Admin_Meta_Boxes::add_error($message);
+    }
+
     protected function get_settings_admin_message()
     {
         /* translators: 1: Payment method title, 2: Plugin settings URL */
@@ -220,6 +232,36 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     //endregion
 
     //region Order
+    /**
+     * Lookup order by meta field value.
+     *
+     * @link https://stackoverflow.com/questions/71438717/extend-wc-get-orders-with-a-custom-meta-key-and-meta-value
+     */
+    protected function get_order_by_meta_field_value(string $meta_key, string $meta_value)
+    {
+        $args = array(
+            'meta_key'   => $meta_key,   // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value' => $meta_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+        );
+
+        $orders = wc_get_orders($args);
+        $orders_count = count($orders);
+
+        if (1 === $orders_count) {
+            return $orders[0];
+        } elseif ($orders_count > 1) {
+            $this->log(
+                sprintf('Duplicate order meta %1$s: %2$s', $meta_key, $meta_value),
+                \WC_Log_Levels::ERROR,
+                array(
+                    'orders' => $orders,
+                )
+            );
+        }
+
+        return false;
+    }
+
     protected function format_price(float $price, string $currency)
     {
         $args = array(
@@ -233,7 +275,6 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     protected function get_order_description(\WC_Order $order)
     {
         $description = sprintf($this->order_template, $order->get_id());
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
         return wp_strip_all_tags(apply_filters("{$this->id}_order_description", $description, $order));
     }
     //endregion
@@ -255,6 +296,21 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         }
 
         return $wp_filesystem;
+    }
+
+    protected static function is_temp_file(string $file_name)
+    {
+        $temp_dir = realpath(get_temp_dir());
+        $file_dir = realpath(dirname($file_name));
+
+        if (empty($temp_dir) || empty($file_dir)) {
+            return false;
+        }
+
+        $temp_dir = trailingslashit($temp_dir);
+        $file_dir = trailingslashit($file_dir);
+
+        return strncmp($file_dir, $temp_dir, strlen($temp_dir)) === 0;
     }
 
     protected static function is_wc_admin()
@@ -368,7 +424,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         array_walk_recursive(
             $data,
             function (&$value, $key) use ($sensitive_keys, $replace) {
-                if (in_array(strtolower( (string) $key), $sensitive_keys, true)) {
+                if (in_array(strtolower(strval($key)), $sensitive_keys, true)) {
                     $value = $replace;
                 }
             }
@@ -385,7 +441,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
             $response = $exception->getResponse();
 
             if (!empty($response)) {
-                return (string) $response->getBody();
+                return strval($response->getBody());
             }
         }
 
@@ -407,13 +463,13 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     {
         // https://developer.woocommerce.com/docs/extensions/core-concepts/woocommerce-plugin-api-callback/
         $callback_url = WC()->api_request_url("wc_{$this->id}");
-        return (string) apply_filters("{$this->id}_callback_url", $callback_url);
+        return strval(apply_filters("{$this->id}_callback_url", $callback_url));
     }
 
     protected function get_redirect_url(\WC_Order $order)
     {
         $redirect_url = $this->get_return_url($order);
-        return (string) apply_filters("{$this->id}_redirect_url", $redirect_url, $order);
+        return strval(apply_filters("{$this->id}_redirect_url", $redirect_url, $order));
     }
     //endregion
 
