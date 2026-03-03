@@ -18,6 +18,7 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     public const MOD_PLUGIN_FILE = null;
 
     public const SUPPORTED_CURRENCIES = array();
+    public const SUPPORTED_LANGUAGES  = array();
     public const ORDER_TEMPLATE       = 'Order #%1$s';
 
     protected $testmode, $debug, $logger;
@@ -331,8 +332,14 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
 
     protected function get_language()
     {
-        $lang = get_locale();
-        return substr($lang, 0, 2);
+        $supported = static::SUPPORTED_LANGUAGES;
+        $lang = substr(get_user_locale(), 0, 2);
+
+        if (empty($supported) || in_array($lang, $supported, true)) {
+            return $lang;
+        }
+
+        return reset($supported);
     }
 
     protected static function get_logs_url()
