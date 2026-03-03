@@ -17,7 +17,9 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
     public const MOD_VERSION     = null;
     public const MOD_PLUGIN_FILE = null;
 
+    /** @var string[] List of supported three-letter ISO 4217 currency codes. Must be overridden by subclasses. */
     public const SUPPORTED_CURRENCIES = array();
+    /** @var string[] List of supported two-letter ISO 639-1 language codes. If empty, all languages are accepted. */
     public const SUPPORTED_LANGUAGES  = array();
     public const ORDER_TEMPLATE       = 'Order #%1$s';
 
@@ -330,6 +332,17 @@ abstract class WC_Payment_Gateway_Base extends \WC_Payment_Gateway
         return $message;
     }
 
+    /**
+     * Get the two-letter ISO 639-1 language code for the current user.
+     *
+     * Returns a value from `SUPPORTED_LANGUAGES` if non-empty and the user locale matches.
+     * * Falls back to the first entry in `SUPPORTED_LANGUAGES` if no match is found.
+     * * If `SUPPORTED_LANGUAGES` is empty, returns the user/site locale language as-is.
+     *
+     * @return string Two-letter language code (e.g. 'en').
+     * @see SUPPORTED_LANGUAGES
+     * @link https://developer.wordpress.org/reference/functions/get_user_locale/
+     */
     protected function get_language()
     {
         $supported = static::SUPPORTED_LANGUAGES;
