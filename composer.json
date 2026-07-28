@@ -24,7 +24,8 @@
         "source": "https://github.com/alexminza/wc-payment-gateway-base"
     },
     "require": {
-        "php": ">=7.2.5"
+        "php": ">=7.2.5",
+        "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {
